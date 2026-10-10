@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <title>Register | Student Performance</title>
+</head>
+
+<body class="login-body">
+
+<div class="register-page">
+
+    <div class="register-card">
+
+        <div class="auth-logo">
+            <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+
+        <h1>Create Account</h1>
+
+        <p class="auth-subtitle">
+            Create your Student Performance account
+        </p>
+
+        <!-- Registration Error -->
+        {% if error %}
+        <div class="auth-error">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <span>{{ error }}</span>
+        </div>
+        {% endif %}
+
+        <form method="POST">
+
+            <!-- Username -->
+            <div class="auth-input">
+                <i class="fa-solid fa-user"></i>
+                <input type="text"
+                       name="username"
+                       placeholder="Username"
+                       autocomplete="username"
+                       required>
+            </div>
+
+            <!-- Password -->
+            <div class="auth-input">
+                <i class="fa-solid fa-lock"></i>
+                <input type="password"
+                       name="password"
+                       placeholder="Password"
+                       autocomplete="new-password"
+                       required>
+            </div>
+
+            <!-- Institute -->
+            <div class="auth-input">
+                <i class="fa-solid fa-building"></i>
+                <input type="text"
+                       name="institute"
+                       placeholder="Institute Name"
+                       required>
+            </div>
+
+            <!-- Roll Number -->
+            <div class="auth-input">
+                <i class="fa-solid fa-id-card"></i>
+                <input type="text"
+                       name="roll_no"
+                       placeholder="Roll Number"
+                       required>
+            </div>
+
+            <!-- Birth Date -->
+            <div class="auth-input">
+                <i class="fa-solid fa-calendar"></i>
+                <input type="date"
+                       name="birth_date"
+                       required>
+            </div>
+
+            <!-- Submit -->
+            <button class="auth-button" type="submit">
+                Create Account
+            </button>
+
+        </form>
+
+        <div class="register-login-link">
+            Already have an account?
+            <a href="/login">Sign In</a>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

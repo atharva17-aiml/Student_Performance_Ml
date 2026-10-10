@@ -1,0 +1,789 @@
+{% extends "base.html" %}
+{% block title %}History | Student Performance{% endblock %}
+
+{% block content %}
+
+<!-- ================= HISTORY HEADER ================= -->
+<div class="dashboard-header">
+    <h2 class="page-title">🕘 Prediction History</h2>
+
+    <p class="dashboard-subtitle">
+        View and search your previous student performance predictions.
+    </p>
+</div>
+
+
+{% if rows|length == 0 %}
+
+<!-- ================= EMPTY STATE ================= -->
+
+<div class="glass-card empty-history-card">
+
+    <div class="empty-history-icon">📊</div>
+
+    <h3>No Prediction History</h3>
+
+    <p>
+        No prediction history yet. Make your first prediction!
+    </p>
+
+    <a href="/" class="history-action-btn">
+        🔍 Make a Prediction
+    </a>
+
+</div>
+
+
+{% else %}
+
+<!-- ================= HISTORY CARD ================= -->
+
+<div class="glass-card history-card">
+
+    <!-- ================= SEARCH + FILTER ================= -->
+
+    <div class="history-toolbar">
+
+        <div class="search-box">
+
+            <span>🔍</span>
+
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search prediction history..."
+            >
+
+        </div>
+
+
+        <div class="filter-box">
+
+            <label for="filterColumn">
+                Filter by
+            </label>
+
+            <select id="filterColumn">
+
+                <option value="all">
+                    All Columns
+                </option>
+
+                <option value="0">
+                    Study Time
+                </option>
+
+                <option value="1">
+                    Failures
+                </option>
+
+                <option value="2">
+                    Absences
+                </option>
+
+                <option value="3">
+                    Health
+                </option>
+
+                <option value="4">
+                    G1
+                </option>
+
+                <option value="5">
+                    G2
+                </option>
+
+                <option value="6">
+                    Predicted Score
+                </option>
+
+                <option value="7">
+                    Performance
+                </option>
+
+                <option value="8">
+                    Model
+                </option>
+
+                <option value="9">
+                    Date
+                </option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= TABLE ================= -->
+
+    <div class="table-wrapper">
+
+        <table class="history-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>Study</th>
+
+                    <th>Failures</th>
+
+                    <th>Absences</th>
+
+                    <th>Health</th>
+
+                    <th>G1</th>
+
+                    <th>G2</th>
+
+                    <th>Predicted Score</th>
+
+                    <th>Performance</th>
+
+                    <th>Model</th>
+
+                    <th>Date</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for r in rows %}
+
+                <tr>
+
+                    <td>
+                        {{ r.studytime }}
+                    </td>
+
+                    <td>
+                        {{ r.failures }}
+                    </td>
+
+                    <td>
+                        {{ r.absences }}
+                    </td>
+
+                    <td>
+                        {{ r.health }}
+                    </td>
+
+                    <td>
+                        {{ r.G1 }}
+                    </td>
+
+                    <td>
+                        {{ r.G2 }}
+                    </td>
+
+                    <td class="predicted-score">
+
+                        <b>
+                            {{ r.predicted_score }}
+                        </b>
+
+                    </td>
+
+                    <td>
+
+                        {% set label = r.prediction_label or 'N/A' %}
+
+                        <span class="prediction-badge {{ label|lower|replace(' ', '-') }}">
+
+                            {{ label }}
+
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span class="model-badge">
+                            {{ r.model_version or 'N/A' }}
+                        </span>
+
+                    </td>
+
+                    <td>
+                        {{ r.created_at }}
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endif %}
+
+
+<!-- ================= SEARCH SCRIPT ================= -->
+
+<script>
+
+const searchInput =
+    document.getElementById("searchInput");
+
+const filterColumn =
+    document.getElementById("filterColumn");
+
+
+if (searchInput && filterColumn) {
+
+    searchInput.addEventListener(
+        "keyup",
+        filterTable
+    );
+
+    filterColumn.addEventListener(
+        "change",
+        filterTable
+    );
+
+}
+
+
+function filterTable() {
+
+    const filter =
+        searchInput.value.toLowerCase();
+
+    const colIndex =
+        filterColumn.value;
+
+
+    const rows =
+        document.querySelectorAll(
+            ".history-table tbody tr"
+        );
+
+
+    rows.forEach(row => {
+
+        let text = "";
+
+
+        if (colIndex === "all") {
+
+            text =
+                row.innerText.toLowerCase();
+
+        } else {
+
+            const cell = row.children[colIndex];
+
+            text = cell
+                ? cell.innerText.toLowerCase()
+                : "";
+
+        }
+
+
+        row.style.display =
+            text.includes(filter)
+                ? ""
+                : "none";
+
+    });
+
+}
+
+</script>
+
+
+<!-- ================= HISTORY CSS ================= -->
+
+<style>
+
+/* Main card */
+
+.history-card {
+
+    max-width: 1150px;
+
+    margin: 0 auto;
+
+}
+
+
+/* Toolbar */
+
+.history-toolbar {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 22px;
+
+    flex-wrap: wrap;
+
+}
+
+
+/* Search */
+
+.search-box {
+
+    flex: 1;
+
+    min-width: 280px;
+
+    height: 46px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 0 14px;
+
+    background: #f5f3fa;
+
+    border: 1px solid #e5e1f2;
+
+    border-radius: 11px;
+
+    transition: 0.25s ease;
+
+}
+
+
+.search-box:focus-within {
+
+    background: #ffffff;
+
+    border-color: #6a5acd;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(106, 90, 205, 0.10);
+
+}
+
+
+.search-box span {
+
+    font-size: 15px;
+
+}
+
+
+.search-box input {
+
+    width: 100%;
+
+    border: none;
+
+    outline: none;
+
+    background: transparent;
+
+    color: #25213a;
+
+    font-family: 'Montserrat', sans-serif;
+
+    font-size: 12px;
+
+}
+
+
+.search-box input::placeholder {
+
+    color: #9994aa;
+
+}
+
+
+/* Filter */
+
+.filter-box {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+}
+
+
+.filter-box label {
+
+    color: #77748a;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+}
+
+
+.filter-box select {
+
+    height: 46px;
+
+    padding: 0 35px 0 14px;
+
+    border-radius: 11px;
+
+    border: 1px solid #e5e1f2;
+
+    background: #f5f3fa;
+
+    color: #25213a;
+
+    font-family: 'Montserrat', sans-serif;
+
+    font-size: 12px;
+
+    outline: none;
+
+    cursor: pointer;
+
+}
+
+
+.filter-box select:focus {
+
+    border-color: #6a5acd;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(106, 90, 205, 0.10);
+
+}
+
+
+/* Table */
+
+.table-wrapper {
+
+    width: 100%;
+
+    overflow-x: auto;
+
+}
+
+
+.history-table {
+
+    width: 100%;
+
+    border-collapse: separate;
+
+    border-spacing: 0;
+
+    color: #25213a;
+
+}
+
+
+.history-table thead {
+
+    background: #f4f1fb !important;
+
+}
+
+
+.history-table th {
+
+    padding: 14px 16px;
+
+    color: #5a3fc0 !important;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    text-align: center;
+
+    white-space: nowrap;
+
+    border-bottom:
+        1px solid #e5e1f2 !important;
+
+}
+
+
+.history-table td {
+
+    padding: 14px 16px;
+
+    color: #555064;
+
+    font-size: 11px;
+
+    text-align: center;
+
+    white-space: nowrap;
+
+    border-bottom:
+        1px solid #eeeaf5 !important;
+
+}
+
+
+.history-table tbody tr {
+
+    transition: background 0.2s ease;
+
+}
+
+
+.history-table tbody tr:hover {
+
+    background: #f8f6fd !important;
+
+}
+
+
+/* Predicted score */
+
+.history-table td.predicted-score {
+
+    color: #6a5acd !important;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+}
+
+
+/* ================= PERFORMANCE BADGES ================= */
+
+.prediction-badge {
+
+    display: inline-block;
+
+    padding: 6px 12px;
+
+    border-radius: 20px;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+
+    background: #eeeaff;
+
+    color: #5a3fc0;
+
+}
+
+
+/* Excellent */
+
+.prediction-badge.excellent {
+
+    background: #e8f8ef;
+
+    color: #16834f;
+
+}
+
+
+/* Good */
+
+.prediction-badge.good {
+
+    background: #eeeaff;
+
+    color: #5a3fc0;
+
+}
+
+
+/* Average */
+
+.prediction-badge.average {
+
+    background: #fff4d6;
+
+    color: #9a6b00;
+
+}
+
+
+/* Needs Improvement */
+
+.prediction-badge.needs-improvement {
+
+    background: #ffe9d6;
+
+    color: #a85b00;
+
+}
+
+
+/* At Risk */
+
+.prediction-badge.at-risk {
+
+    background: #ffe5e5;
+
+    color: #c62828;
+
+}
+
+
+/* ================= MODEL BADGE ================= */
+
+.model-badge {
+
+    display: inline-block;
+
+    padding: 5px 10px;
+
+    border-radius: 8px;
+
+    background: #f0edfa;
+
+    color: #5a3fc0;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+}
+
+
+/* Empty history */
+
+.empty-history-card {
+
+    max-width: 700px;
+
+    margin: 0 auto;
+
+    text-align: center;
+
+    padding: 45px 25px;
+
+}
+
+
+.empty-history-icon {
+
+    font-size: 42px;
+
+    margin-bottom: 15px;
+
+}
+
+
+.empty-history-card h3 {
+
+    color: #25213a;
+
+    margin-bottom: 8px;
+
+}
+
+
+.empty-history-card p {
+
+    color: #77748a;
+
+    font-size: 13px;
+
+    margin-bottom: 22px;
+
+}
+
+
+.history-action-btn {
+
+    display: inline-block;
+
+    padding: 12px 22px;
+
+    border-radius: 22px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #6a5acd,
+            #5a3fc0
+        );
+
+    color: #ffffff;
+
+    text-decoration: none;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    box-shadow:
+        0 7px 16px
+        rgba(106, 90, 205, 0.22);
+
+}
+
+
+.history-action-btn:hover {
+
+    opacity: 0.92;
+
+}
+
+
+/* Mobile */
+
+@media (max-width: 700px) {
+
+    .history-toolbar {
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+    }
+
+
+    .search-box {
+
+        width: 100%;
+
+    }
+
+
+    .filter-box {
+
+        width: 100%;
+
+        justify-content: space-between;
+
+    }
+
+
+    .filter-box select {
+
+        flex: 1;
+
+    }
+
+}
+
+</style>
+
+{% endblock %}

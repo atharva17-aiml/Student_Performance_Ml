@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+{% block title %}Edit Profile | Student Performance{% endblock %}
+
+{% block content %}
+
+<!-- ================= PROFILE HEADER ================= -->
+<div class="dashboard-header">
+    <h2 class="page-title">👤 Edit Profile</h2>
+    <p class="dashboard-subtitle">
+        Update your academic and personal information.
+    </p>
+</div>
+
+
+<!-- ================= SUCCESS MESSAGE ================= -->
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="flash-container profile-flash">
+            <div class="flash-message">
+                {{ messages[0] }}
+            </div>
+        </div>
+    {% endif %}
+{% endwith %}
+
+
+<!-- ================= PROFILE FORM ================= -->
+<div class="glass-card profile-edit-card">
+
+    <div class="section-heading">
+        <div class="section-icon">👤</div>
+        <div>
+            <h3>Profile Information</h3>
+            <p>Keep your registered information up to date.</p>
+        </div>
+    </div>
+
+
+    <form method="POST" class="profile-form">
+
+        <div class="profile-form-grid">
+
+            <!-- Username -->
+            <div class="profile-field">
+                <label>Username</label>
+
+                <input
+                    type="text"
+                    value="{{ session.get('username') }}"
+                    disabled
+                >
+            </div>
+
+
+            <!-- Institute -->
+            <div class="profile-field">
+                <label>Institute</label>
+
+                <input
+                    type="text"
+                    name="institute"
+                    value="{{ session.get('institute') }}"
+                    placeholder="Institute"
+                    required
+                >
+            </div>
+
+
+            <!-- Roll Number -->
+            <div class="profile-field">
+                <label>Roll Number</label>
+
+                <input
+                    type="text"
+                    name="roll_no"
+                    value="{{ session.get('roll_no') }}"
+                    placeholder="Roll Number"
+                    required
+                >
+            </div>
+
+
+            <!-- Date of Birth -->
+            <div class="profile-field">
+                <label>Date of Birth</label>
+
+                <input
+                    type="date"
+                    name="birth_date"
+                    value="{{ session.get('birth_date') }}"
+                    required
+                >
+            </div>
+
+        </div>
+
+
+        <!-- Save Button -->
+        <div class="profile-button-wrapper">
+            <button class="predict-btn" type="submit">
+                💾 Save Changes
+            </button>
+        </div>
+
+    </form>
+
+</div>
+
+
+<!-- ================= PROFILE PAGE CSS ================= -->
+<style>
+
+.profile-edit-card {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.profile-form {
+    width: 100%;
+}
+
+.profile-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.profile-field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.profile-field label {
+    color: var(--text);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.profile-field input {
+    width: 100%;
+    height: 50px;
+    padding: 12px 15px;
+    border-radius: 11px;
+    border: 1px solid var(--border);
+    background: #f5f3fa;
+    color: var(--text);
+    font-size: 13px;
+    outline: none;
+    transition: all 0.25s ease;
+}
+
+.profile-field input:focus {
+    background: #ffffff;
+    border-color: var(--purple);
+    box-shadow: 0 0 0 3px rgba(106, 90, 205, 0.10);
+}
+
+.profile-field input:disabled {
+    background: #eeeaf5;
+    color: #77748a;
+    cursor: not-allowed;
+}
+
+.profile-button-wrapper {
+    width: 100%;
+    max-width: 800px;
+    margin: 25px auto 0;
+}
+
+.profile-button-wrapper .predict-btn {
+    width: 100%;
+}
+
+.profile-flash {
+    max-width: 900px;
+    margin: 0 auto 20px;
+}
+
+@media (max-width: 700px) {
+
+    .profile-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-edit-card {
+        padding: 18px;
+    }
+}
+
+</style>
+
+{% endblock %}

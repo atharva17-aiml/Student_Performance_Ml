@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        {% block title %}
+        Dashboard | Student Performance
+        {% endblock %}
+    </title>
+
+    <!-- GLOBAL CSS -->
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/global.css') }}"
+    >
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+
+        /* =====================================================
+           SIDEBAR
+        ===================================================== */
+
+        .sidebar-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+
+        .sidebar-logo {
+            width: 44px;
+            height: 44px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 13px;
+
+            background: linear-gradient(
+                135deg,
+                #ffffff,
+                rgba(255,255,255,0.82)
+            );
+
+            color: #6a5acd;
+
+            font-size: 21px;
+
+            box-shadow:
+                0 6px 15px
+                rgba(0, 0, 0, 0.12);
+        }
+
+        .sidebar-main-title {
+            display: block;
+
+            color: #ffffff;
+
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .sidebar-subtitle {
+            display: block;
+
+            margin-top: 2px;
+
+            color: rgba(255,255,255,0.70);
+
+            font-size: 9px;
+            font-weight: 500;
+        }
+
+
+        /* =====================================================
+           PROFILE
+        ===================================================== */
+
+        .profile-mini {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            padding: 14px;
+
+            background: rgba(255,255,255,0.12);
+
+            border: 1px solid rgba(255,255,255,0.18);
+
+            border-radius: 14px;
+
+            margin-bottom: 25px;
+        }
+
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+
+            min-width: 0;
+        }
+
+        .username {
+            color: #ffffff;
+
+            font-size: 12px;
+            font-weight: 700;
+
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .admin-label {
+            color: #facc15;
+
+            font-size: 8px;
+            font-weight: 800;
+
+            margin-top: 3px;
+        }
+
+        .user-label {
+            color: rgba(255,255,255,0.70);
+
+            font-size: 8px;
+            font-weight: 700;
+
+            margin-top: 3px;
+        }
+
+        .avatar {
+            flex-shrink: 0;
+
+            width: 42px;
+            height: 42px;
+
+            border-radius: 50%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: rgba(255,255,255,0.18);
+
+            border: 1px solid rgba(255,255,255,0.30);
+
+            color: #ffffff;
+
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+
+        /* =====================================================
+           MENU LABELS
+        ===================================================== */
+
+        .menu-label {
+            color: rgba(255,255,255,0.55);
+
+            font-size: 8px;
+            font-weight: 800;
+
+            letter-spacing: 1px;
+
+            margin: 0 0 8px 8px;
+        }
+
+        .admin-menu-label {
+            margin-top: 24px;
+        }
+
+
+        /* =====================================================
+           NAVIGATION
+        ===================================================== */
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+
+            gap: 12px;
+
+            padding: 12px 14px;
+
+            margin: 5px 0;
+
+            border-radius: 11px;
+
+            text-decoration: none;
+
+            color: rgba(255,255,255,0.88);
+
+            font-size: 11px;
+            font-weight: 600;
+
+            transition:
+                background 0.2s ease,
+                color 0.2s ease,
+                transform 0.2s ease;
+        }
+
+        .nav-icon {
+            width: 20px;
+
+            text-align: center;
+
+            font-size: 15px;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255,255,255,0.16);
+
+            color: #ffffff;
+
+            transform: translateX(3px);
+        }
+
+        .nav-btn.active {
+            background: rgba(255,255,255,0.20);
+
+            color: #ffffff;
+        }
+
+        .admin-btn {
+            color: #ffffff;
+        }
+
+        .admin-btn:hover {
+            background: rgba(255,255,255,0.18);
+
+            color: #ffffff;
+        }
+
+
+        /* =====================================================
+           LOGOUT
+        ===================================================== */
+
+        .logout-btn {
+            background: rgba(220,53,69,0.92);
+
+            border: 1px solid rgba(255,255,255,0.12);
+
+            color: #ffffff;
+        }
+
+        .logout-btn:hover {
+            background: #dc3545;
+
+            color: #ffffff;
+
+            transform: none;
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+        }
+
+
+        /* =====================================================
+           PURPLE SIDEBAR
+        ===================================================== */
+
+        .sidebar {
+            background: linear-gradient(
+                180deg,
+                #6a5acd 0%,
+                #5a3fc0 100%
+            );
+
+            color: #ffffff;
+
+            border-right: none;
+
+            box-shadow:
+                8px 0 30px
+                rgba(90,63,192,0.18);
+        }
+
+
+        /* =====================================================
+           MAIN AREA
+        ===================================================== */
+
+        .dashboard-body {
+            background: #f7f5ff;
+        }
+
+        .dashboard-wrapper {
+            background: #f7f5ff;
+        }
+
+        .dashboard-main {
+            background: #f7f5ff;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 700px) {
+
+            .sidebar {
+                width: 210px;
+                padding: 18px;
+            }
+
+            .sidebar-main-title {
+                font-size: 14px;
+            }
+
+            .sidebar-subtitle {
+                font-size: 8px;
+            }
+
+            .nav-btn {
+                padding: 10px;
+                font-size: 10px;
+            }
+
+            .profile-mini {
+                padding: 10px;
+            }
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            .dashboard-wrapper {
+                display: block;
+            }
+
+            .sidebar {
+                width: 100%;
+                min-height: auto;
+                padding: 15px;
+            }
+
+            .sidebar-menu {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+
+            .menu-label {
+                display: none;
+            }
+
+            .nav-btn {
+                margin: 2px;
+            }
+
+            .sidebar-footer {
+                margin-top: 10px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body class="dashboard-body">
+
+<div class="dashboard-wrapper">
+
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar">
+
+
+        <!-- LOGO -->
+
+        <div class="sidebar-title">
+
+            <div class="sidebar-logo">
+                🎓
+            </div>
+
+            <div>
+
+                <span class="sidebar-main-title">
+                    Student ML
+                </span>
+
+                <span class="sidebar-subtitle">
+                    Performance Analytics
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- PROFILE -->
+
+        <div class="profile-mini">
+
+            <div class="avatar">
+
+                {{
+                    session.get('username')[0]|upper
+                    if session.get('username')
+                    else '?'
+                }}
+
+            </div>
+
+
+            <div class="profile-info">
+
+                <div class="username">
+                    {{ session.get('username') }}
+                </div>
+
+
+                {% if session.get("role") == "admin" %}
+
+                <span class="admin-label">
+                    ADMIN
+                </span>
+
+                {% else %}
+
+                <span class="user-label">
+                    STUDENT
+                </span>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <!-- NAVIGATION -->
+
+        <nav class="sidebar-menu">
+
+
+            <div class="menu-label">
+                MAIN MENU
+            </div>
+
+
+            <a
+                href="/"
+                class="nav-btn"
+            >
+                <span class="nav-icon">🏠</span>
+                <span>Dashboard</span>
+            </a>
+
+
+            <a
+                href="/profile"
+                class="nav-btn"
+            >
+                <span class="nav-icon">👤</span>
+                <span>Profile</span>
+            </a>
+
+
+            <a
+                href="/analysis"
+                class="nav-btn"
+            >
+                <span class="nav-icon">📊</span>
+                <span>Analysis</span>
+            </a>
+
+
+            <a
+                href="/history"
+                class="nav-btn"
+            >
+                <span class="nav-icon">🕘</span>
+                <span>History</span>
+            </a>
+
+
+{% if session.get("role") == "admin" %}
+
+<div class="menu-label admin-menu-label">
+    ADMINISTRATION
+</div>
+
+<a
+    href="/admin"
+    class="nav-btn admin-btn"
+>
+    <span class="nav-icon">🛠</span>
+    <span>Admin Panel</span>
+</a>
+
+<a
+    href="/admin/audit-logs"
+    class="nav-btn admin-btn"
+>
+    <span class="nav-icon">📝</span>
+    <span>Audit Logs</span>
+</a>
+
+{% endif %}
+
+
+        </nav>
+
+
+        <!-- LOGOUT -->
+
+        <div class="sidebar-footer">
+
+            <a
+                href="/logout"
+                class="nav-btn logout-btn"
+            >
+
+                <span class="nav-icon">
+                    🚪
+                </span>
+
+                <span>
+                    Logout
+                </span>
+
+            </a>
+
+        </div>
+
+
+    </aside>
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="dashboard-main">
+
+        {% block content %}
+
+        {% endblock %}
+
+    </main>
+
+
+</div>
+
+</body>
+
+</html>

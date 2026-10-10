@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+
+{% block title %}Audit Logs | Admin{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-header">
+
+    <div>
+        <h2 class="page-title">
+            🔐 Audit Logs
+        </h2>
+
+        <p class="dashboard-subtitle">
+            Monitor important application and user activities.
+        </p>
+    </div>
+
+</div>
+
+
+<div class="glass-card audit-card">
+
+    <div class="section-heading">
+
+        <div class="section-icon">
+            📝
+        </div>
+
+        <div>
+            <h3>Application Activity</h3>
+
+            <p>
+                Recent security and application events.
+            </p>
+        </div>
+
+    </div>
+
+
+    {% if logs %}
+
+    <div class="audit-table-wrapper">
+
+        <table class="audit-table">
+
+            <thead>
+
+                <tr>
+                    <th>ID</th>
+                    <th>User</th>
+                    <th>Action</th>
+                    <th>Description</th>
+                    <th>IP Address</th>
+                    <th>Date & Time</th>
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for log in logs %}
+
+                <tr>
+
+                    <td>
+                        {{ log.id }}
+                    </td>
+
+                    <td>
+                        {{ log.username or "System" }}
+                    </td>
+
+                    <td>
+
+                        <span class="audit-action">
+                            {{ log.action }}
+                        </span>
+
+                    </td>
+
+                    <td>
+                        {{ log.description or "-" }}
+                    </td>
+
+                    <td>
+                        {{ log.ip_address or "-" }}
+                    </td>
+
+                    <td>
+                        {{ log.created_at }}
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+    <div class="audit-empty">
+
+        <div class="audit-empty-icon">
+            📭
+        </div>
+
+        <h3>No Audit Logs</h3>
+
+        <p>
+            No application activity has been recorded yet.
+        </p>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+
+<style>
+
+.audit-card {
+    width: 100%;
+    overflow: hidden;
+}
+
+.audit-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 20px;
+}
+
+.audit-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 900px;
+}
+
+.audit-table th {
+    padding: 14px;
+    text-align: left;
+    background: #f0ecff;
+    color: #5a3fc0;
+    font-size: 12px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.audit-table td {
+    padding: 14px;
+    border-bottom: 1px solid #eeeaf5;
+    color: #4d4960;
+    font-size: 12px;
+    vertical-align: top;
+}
+
+.audit-table tbody tr:hover {
+    background: #faf9ff;
+}
+
+.audit-action {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 8px;
+    background: #eeeafd;
+    color: #5a3fc0;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+}
+
+.audit-empty {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.audit-empty-icon {
+    font-size: 45px;
+    margin-bottom: 10px;
+}
+
+.audit-empty h3 {
+    margin: 0 0 8px;
+    color: #25213a;
+}
+
+.audit-empty p {
+    margin: 0;
+    color: #888398;
+}
+
+</style>
+
+{% endblock %}

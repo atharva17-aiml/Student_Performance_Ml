@@ -1,0 +1,53 @@
+﻿STEPS TO RUN
+1. Start MySQL Server
+Open MySQL Command Line Client – if it opens, MySQL is running.
+
+2. Verify Database (One-time check)
+Open MySQL Command Line Client and run:
+USE student_ml;
+SHOW TABLES;
+You should see:
+users
+predictions
+If not, create them again.
+Exit:
+Exit;
+
+
+3. Open Project Folder
+Open Command Prompt in:
+Desktop/student_performance_ml
+
+4. Install Required Python Packages (one time)
+python -m pip install flask pandas numpy scikit-learn matplotlib mysql-connector-python werkzeug
+
+5. Train ML Model (important after dataset change)
+python train_model.py
+You should see R² scores printed.
+
+6. Run Flask Application
+python app.py
+You must see:
+Running on http://127.0.0.1:5000
+Keep this terminal open.
+
+7. Open Website in Browser
+Go to:
+http://127.0.0.1:5000/login
+
+8. First Time Setup
+Register Admin
+Go to:
+/register
+Create:
+username: admin
+password: anything
+Then login.
+
+9. Use Features
+Feature          URL
+Prediction	  /
+History 	  /history
+Analysis charts   /analysis
+Admin panel	  /admin
+Logout     	  /logout

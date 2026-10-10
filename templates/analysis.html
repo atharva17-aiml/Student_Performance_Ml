@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+{% block title %}Analysis | Student Performance{% endblock %}
+
+{% block content %}
+
+<!-- ================= ANALYSIS HEADER ================= -->
+<div class="dashboard-header">
+    <h2 class="page-title">📊 Performance Analysis</h2>
+    <p class="dashboard-subtitle">
+        Track your predicted performance across your previous predictions.
+    </p>
+</div>
+
+
+<!-- ================= SCORE CHART ================= -->
+<div class="glass-card analysis-card">
+
+    <div class="section-heading">
+        <div class="section-icon">📈</div>
+
+        <div>
+            <h3>Predicted Score Trend</h3>
+            <p>Your prediction scores over time.</p>
+        </div>
+    </div>
+
+    <div class="chart-container">
+        <canvas id="scoreChart"></canvas>
+    </div>
+
+</div>
+
+
+<!-- ================= CHART.JS ================= -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+const labels = JSON.parse('{{ labels | tojson | safe }}');
+const scores = JSON.parse('{{ scores | tojson | safe }}');
+
+const ctx = document.getElementById('scoreChart').getContext('2d');
+
+
+/* Purple gradient */
+
+const gradient = ctx.createLinearGradient(0, 0, 0, 350);
+
+gradient.addColorStop(0, 'rgba(106, 90, 205, 0.25)');
+gradient.addColorStop(1, 'rgba(106, 90, 205, 0.02)');
+
+
+/* Chart */
+
+new Chart(ctx, {
+
+    type: 'line',
+
+    data: {
+
+        labels: labels,
+
+        datasets: [{
+
+            label: 'Predicted Score',
+
+            data: scores,
+
+            borderColor: '#6a5acd',
+
+            backgroundColor: gradient,
+
+            borderWidth: 3,
+
+            tension: 0.4,
+
+            fill: true,
+
+            pointRadius: 5,
+
+            pointHoverRadius: 7,
+
+            pointBackgroundColor: '#ffffff',
+
+            pointBorderColor: '#6a5acd',
+
+            pointBorderWidth: 3
+
+        }]
+
+    },
+
+
+    options: {
+
+        responsive: true,
+
+        maintainAspectRatio: false,
+
+
+        interaction: {
+            intersect: false,
+            mode: 'index'
+        },
+
+
+        plugins: {
+
+            legend: {
+
+                display: true,
+
+                labels: {
+                    color: '#25213a',
+                    font: {
+                        family: 'Montserrat',
+                        size: 12,
+                        weight: '600'
+                    },
+                    usePointStyle: true,
+                    padding: 20
+                }
+
+            },
+
+
+            tooltip: {
+
+                backgroundColor: '#ffffff',
+
+                titleColor: '#25213a',
+
+                bodyColor: '#6a5acd',
+
+                borderColor: '#e5e1f2',
+
+                borderWidth: 1,
+
+                padding: 12,
+
+                titleFont: {
+                    family: 'Montserrat',
+                    weight: '700'
+                },
+
+                bodyFont: {
+                    family: 'Montserrat',
+                    weight: '500'
+                }
+
+            }
+
+        },
+
+
+        scales: {
+
+            x: {
+
+                ticks: {
+                    color: '#77748a',
+
+                    font: {
+                        family: 'Montserrat',
+                        size: 11
+                    }
+                },
+
+                grid: {
+                    color: '#eeeaf5'
+                }
+
+            },
+
+
+            y: {
+
+                beginAtZero: true,
+
+                ticks: {
+                    color: '#77748a',
+
+                    font: {
+                        family: 'Montserrat',
+                        size: 11
+                    }
+                },
+
+                grid: {
+                    color: '#eeeaf5'
+                }
+
+            }
+
+        }
+
+    }
+
+});
+
+</script>
+
+
+<!-- ================= ANALYSIS CSS ================= -->
+<style>
+
+.analysis-card {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.chart-container {
+    position: relative;
+    width: 100%;
+    height: 380px;
+    margin-top: 10px;
+}
+
+@media (max-width: 700px) {
+
+    .analysis-card {
+        padding: 18px;
+    }
+
+    .chart-container {
+        height: 300px;
+    }
+
+}
+
+</style>
+
+{% endblock %}

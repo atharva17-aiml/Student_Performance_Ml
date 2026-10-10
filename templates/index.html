@@ -1,0 +1,317 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | Student Performance{% endblock %}
+
+{% block content %}
+
+<!-- ================= DASHBOARD HEADER ================= -->
+<div class="dashboard-header">
+    <div>
+        <h2 class="page-title">🎓 Student Performance Dashboard</h2>
+        <p class="dashboard-subtitle">
+            Track your academic performance and generate predictions.
+        </p>
+    </div>
+</div>
+
+
+<!-- ================= STATS ================= -->
+<div class="card-grid dashboard-stats">
+
+    {% if session.get("role") == "admin" %}
+    <div class="glass-card stat-card">
+        <div class="stat-icon">👥</div>
+        <div class="stat-content">
+            <span class="stat-label">Total Users</span>
+            <strong>{{ total_users }}</strong>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="glass-card stat-card">
+        <div class="stat-icon">📊</div>
+        <div class="stat-content">
+            <span class="stat-label">Your Predictions</span>
+            <strong>{{ total_predictions }}</strong>
+        </div>
+    </div>
+
+    <div class="glass-card stat-card">
+        <div class="stat-icon">⭐</div>
+        <div class="stat-content">
+            <span class="stat-label">Your Average Score</span>
+            <strong>
+                {% if avg_score is not none %}
+                    {{ avg_score }}
+                {% else %}
+                    --
+                {% endif %}
+            </strong>
+        </div>
+    </div>
+
+    <div class="glass-card stat-card">
+        <div class="stat-icon">📈</div>
+        <div class="stat-content">
+            <span class="stat-label">Latest Score</span>
+            <strong>
+                {% if latest_score is not none %}
+                    {{ latest_score }}
+                {% else %}
+                    --
+                {% endif %}
+            </strong>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- ================= PROFILE ================= -->
+<div class="glass-card profile-card">
+
+    <div class="section-heading">
+        <div class="section-icon">👤</div>
+        <div>
+            <h3>Student Profile</h3>
+            <p>Your registered academic information</p>
+        </div>
+    </div>
+
+    <div class="profile-grid">
+
+        <div class="profile-item">
+            <span>Username</span>
+            <strong>{{ profile_username }}</strong>
+        </div>
+
+        <div class="profile-item">
+            <span>Institute</span>
+            <strong>{{ profile_institute }}</strong>
+        </div>
+
+        <div class="profile-item">
+            <span>Roll No</span>
+            <strong>{{ profile_roll_no }}</strong>
+        </div>
+
+        <div class="profile-item">
+            <span>Date of Birth</span>
+            <strong>{{ profile_birth_date }}</strong>
+        </div>
+
+        <div class="profile-item">
+            <span>Total Predictions</span>
+            <strong>{{ total_predictions }}</strong>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= PREDICTION ================= -->
+<div class="glass-card predict-card">
+
+    <div class="section-heading prediction-heading">
+        <div class="section-icon">📈</div>
+
+        <div>
+            <h3>Predict Student Performance</h3>
+            <p>Enter the student's academic information below.</p>
+        </div>
+    </div>
+
+
+    <!-- FORM -->
+    <form method="POST" action="/predict" class="predict-form">
+
+        <div class="predict-grid">
+
+            <input
+                type="number"
+                name="studytime"
+                min="1"
+                max="4"
+                placeholder="Study Time (1–4)"
+                required
+            >
+
+            <input
+                type="number"
+                name="failures"
+                min="0"
+                max="3"
+                placeholder="Past Failures (0–3)"
+                required
+            >
+
+            <input
+                type="number"
+                name="absences"
+                min="0"
+                max="93"
+                placeholder="Absences"
+                required
+            >
+
+            <input
+                type="number"
+                name="health"
+                min="1"
+                max="5"
+                placeholder="Health (1–5)"
+                required
+            >
+
+            <input
+                type="number"
+                name="G1"
+                min="0"
+                max="20"
+                placeholder="First Period Grade (0–20)"
+                required
+            >
+
+            <input
+                type="number"
+                name="G2"
+                min="0"
+                max="20"
+                placeholder="Second Period Grade (0–20)"
+                required
+            >
+
+        </div>
+
+
+        <!-- BUTTON -->
+        <div class="predict-btn-wrapper">
+            <button type="submit" class="predict-btn">
+                🔍 Predict Performance
+            </button>
+        </div>
+
+    </form>
+
+
+    <!-- SUCCESS MESSAGE -->
+    {% if success_msg %}
+        <div class="flash-container">
+            <div class="flash-message">
+                {{ success_msg }}
+            </div>
+        </div>
+    {% endif %}
+
+</div>
+
+
+<!-- ===================================================== -->
+<!-- PERSONALIZED RECOMMENDATIONS -->
+<!-- ===================================================== -->
+
+{% if recommendations %}
+
+<div class="glass-card recommendations-card">
+
+    <div class="section-heading">
+
+        <div class="section-icon">
+            💡
+        </div>
+
+        <div>
+            <h3>Personalized Recommendations</h3>
+
+            <p>
+                Recommendations based on your prediction,
+                academic performance and input factors.
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="recommendations-grid">
+
+        {% for recommendation in recommendations %}
+
+        <div class="recommendation-card priority-{{ recommendation.priority }}">
+
+            <div class="recommendation-header">
+
+                <div class="recommendation-icon">
+
+                    {% if recommendation.priority == "high" %}
+                        🔴
+                    {% elif recommendation.priority == "medium" %}
+                        🟠
+                    {% else %}
+                        🟢
+                    {% endif %}
+
+                </div>
+
+                <div>
+
+                    <h4>
+                        {{ recommendation.title }}
+                    </h4>
+
+                    <span class="recommendation-priority">
+
+                        {% if recommendation.priority == "high" %}
+                            High Priority
+                        {% elif recommendation.priority == "medium" %}
+                            Medium Priority
+                        {% else %}
+                            Low Priority
+                        {% endif %}
+
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <p class="recommendation-message">
+                {{ recommendation.message }}
+            </p>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endif %}
+
+
+<!-- ================= AUTO HIDE MESSAGE ================= -->
+<script>
+
+setTimeout(() => {
+
+    const flash = document.querySelector('.flash-container');
+
+    if (flash) {
+
+        flash.style.transition = "opacity 0.5s";
+        flash.style.opacity = "0";
+
+        setTimeout(() => {
+            flash.remove();
+        }, 500);
+
+    }
+
+}, 4000);
+
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Verify OTP | Student Performance</title>
+
+    <style>
+        .simple-auth-page {
+            min-height:100vh; display:flex; align-items:center; justify-content:center;
+            padding:24px; background:#f6f5f8; font-family:'Montserrat',sans-serif;
+        }
+        .simple-auth-card {
+            width:900px; max-width:100%; min-height:520px; display:flex; overflow:hidden;
+            border-radius:24px; background:#fff; box-shadow:0 22px 55px rgba(0,0,0,.16);
+        }
+        .simple-auth-brand {
+            width:50%; display:flex; flex-direction:column; align-items:center; justify-content:center;
+            padding:45px; text-align:center; color:#fff; background:linear-gradient(135deg,#6a5acd,#5a3fc0);
+        }
+        .simple-auth-brand-icon,.simple-auth-logo {
+            width:52px; height:52px; display:flex; align-items:center; justify-content:center;
+            border-radius:50%; margin-bottom:18px; font-size:22px;
+        }
+        .simple-auth-brand-icon { background:rgba(255,255,255,.16); }
+        .simple-auth-brand h1 { margin:0 0 12px; font-size:28px; font-weight:800; }
+        .simple-auth-brand p { max-width:300px; margin:0; font-size:12px; line-height:1.7; }
+        .simple-auth-form { width:50%; display:flex; align-items:center; justify-content:center; padding:45px; }
+        .simple-auth-content { width:100%; max-width:330px; text-align:center; }
+        .simple-auth-logo {
+            margin:0 auto 18px; color:#fff; background:linear-gradient(135deg,#6a5acd,#5a3fc0);
+            box-shadow:0 7px 16px rgba(106,90,205,.25);
+        }
+        .simple-auth-content h2 { margin:0; color:#171717; font-size:25px; font-weight:800; }
+        .simple-auth-subtitle { margin:10px 0 24px; color:#888; font-size:11px; line-height:1.6; }
+        .simple-auth-input {
+            display:flex; align-items:center; width:100%; height:42px; margin-bottom:14px;
+            padding:0 12px 0 0; border-radius:8px; background:#eee; transition:.25s ease;
+        }
+        .simple-auth-input:focus-within {
+            background:#fff; box-shadow:0 0 0 3px rgba(106,90,205,.10); border:1px solid #6a5acd;
+        }
+        .simple-auth-input i { width:45px; color:#777; font-size:14px; }
+        .simple-auth-input input {
+            width:100%; height:100%; border:0; outline:0; background:transparent;
+            color:#333; font-family:'Montserrat',sans-serif; font-size:12px; letter-spacing:2px;
+        }
+        .simple-auth-input input::placeholder { color:#888; letter-spacing:0; }
+        .simple-auth-button {
+            width:190px; height:44px; margin-top:8px; border:0; border-radius:22px;
+            color:#fff; background:linear-gradient(135deg,#6a5acd,#5a3fc0);
+            font-family:'Montserrat',sans-serif; font-size:12px; font-weight:800;
+            letter-spacing:.5px; cursor:pointer; box-shadow:0 7px 16px rgba(106,90,205,.25);
+            transition:.25s ease;
+        }
+        .simple-auth-button:hover { transform:translateY(-2px); box-shadow:0 10px 22px rgba(106,90,205,.35); }
+        .simple-auth-error {
+            display:flex; align-items:center; gap:8px; margin-bottom:15px; padding:10px 12px;
+            border-radius:8px; color:#b42318; background:#fff0ef; font-size:11px; text-align:left;
+        }
+        @media(max-width:700px) {
+            .simple-auth-card { width:100%; min-height:auto; }
+            .simple-auth-brand { display:none; }
+            .simple-auth-form { width:100%; min-height:520px; padding:35px 25px; }
+        }
+    </style>
+</head>
+
+<body class="login-body">
+
+<div class="simple-auth-page">
+    <div class="simple-auth-card">
+
+        <div class="simple-auth-brand">
+            <div class="simple-auth-brand-icon">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <h1>Secure Verification</h1>
+            <p>
+                Verify your identity with the one-time password
+                before continuing with your account recovery.
+            </p>
+        </div>
+
+        <div class="simple-auth-form">
+            <div class="simple-auth-content">
+
+                <div class="simple-auth-logo">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+
+                <h2>Verify OTP</h2>
+
+                <p class="simple-auth-subtitle">
+                Enter the 6-digit verification code to continue.
+                </p>
+
+                {% if error %}
+                <div class="simple-auth-error">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    <span>{{ error }}</span>
+                </div>
+                {% endif %}
+
+                <form method="POST">
+
+                    <div class="simple-auth-input">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <input type="text"
+                               name="otp"
+                               placeholder="6-digit OTP"
+                               required
+                               maxlength="6"
+                               inputmode="numeric">
+                    </div>
+
+                    <button class="simple-auth-button" type="submit">
+                        Verify OTP
+                    </button>
+
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

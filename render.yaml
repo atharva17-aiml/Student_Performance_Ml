@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: student-performance-ml
+    env: python
+    buildCommand: ""
+    startCommand: gunicorn app:app

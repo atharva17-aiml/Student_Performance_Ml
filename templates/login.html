@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <title>Student Performance | Login</title>
+</head>
+
+<body class="login-body">
+
+<div class="auth-container" id="container">
+
+    <!-- ================= SIGN UP ================= -->
+    <div class="auth-form-container sign-up">
+
+        <form method="POST" action="/register">
+
+            <div class="auth-logo">
+                <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+
+            <h1>Create Account</h1>
+
+            <p class="auth-subtitle">
+                Create your Student Performance account
+            </p>
+
+            {% if error %}
+            <div class="auth-error">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <span>{{ error }}</span>
+            </div>
+            {% endif %}
+
+            <div class="auth-input">
+                <i class="fa-solid fa-user"></i>
+                <input type="text"
+                       name="username"
+                       placeholder="Username"
+                       required>
+            </div>
+
+            <div class="auth-input">
+                <i class="fa-solid fa-building"></i>
+                <input type="text"
+                       name="institute"
+                       placeholder="Institute Name"
+                       required>
+            </div>
+
+            <div class="auth-input">
+                <i class="fa-solid fa-id-card"></i>
+                <input type="text"
+                       name="roll_no"
+                       placeholder="Roll Number"
+                       required>
+            </div>
+
+            <div class="auth-input">
+                <i class="fa-solid fa-calendar"></i>
+                <input type="date"
+                       name="birth_date"
+                       required>
+            </div>
+
+            <div class="auth-input">
+                <i class="fa-solid fa-lock"></i>
+                <input type="password"
+                       name="password"
+                       placeholder="Password"
+                       required>
+            </div>
+
+            <button class="auth-button" type="submit">
+                Create Account
+            </button>
+
+        </form>
+    </div>
+
+
+    <!-- ================= SIGN IN ================= -->
+    <div class="auth-form-container sign-in">
+
+        <form method="POST" action="/login">
+
+            <div class="auth-logo">
+                <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+
+            <h1>Welcome Back</h1>
+
+            <p class="auth-subtitle">
+                Sign in to continue to Student Performance
+            </p>
+
+            {% if error %}
+            <div class="auth-error">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <span>{{ error }}</span>
+            </div>
+            {% endif %}
+
+            <div class="auth-input">
+                <i class="fa-solid fa-user"></i>
+                <input type="text"
+                       name="username"
+                       placeholder="Username"
+                       required>
+            </div>
+
+            <div class="auth-input">
+                <i class="fa-solid fa-lock"></i>
+                <input type="password"
+                       name="password"
+                       placeholder="Password"
+                       required>
+            </div>
+
+            <a class="forgot-password" href="/forgot">
+                Forgot Your Password?
+            </a>
+
+            <button class="auth-button" type="submit">
+                Sign In
+            </button>
+
+        </form>
+    </div>
+
+
+    <!-- ================= PURPLE TOGGLE PANEL ================= -->
+    <div class="toggle-container">
+
+        <div class="toggle">
+
+            <!-- LEFT PANEL -->
+            <div class="toggle-panel toggle-left">
+
+                <div class="toggle-icon">
+                    <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                </div>
+
+                <h1>Welcome Back!</h1>
+
+                <p>
+                    Already have an account?
+                    Sign in to access your student performance dashboard.
+                </p>
+
+                <button type="button"
+                        class="toggle-button"
+                        id="login">
+                    Sign In
+                </button>
+
+            </div>
+
+
+            <!-- RIGHT PANEL -->
+            <div class="toggle-panel toggle-right">
+
+                <div class="toggle-icon">
+                    <i class="fa-solid fa-user-plus"></i>
+                </div>
+
+                <h1>Hello, Friend!</h1>
+
+                <p>
+                    Create your account and start tracking
+                    and analyzing your academic performance.
+                </p>
+
+                <button type="button"
+                        class="toggle-button"
+                        id="register">
+                    Sign Up
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</body>
+</html>

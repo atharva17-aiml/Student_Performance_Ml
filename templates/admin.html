@@ -1,0 +1,2389 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="admin-page">
+
+    <!-- ============================================================
+         PAGE HEADER
+    ============================================================ -->
+
+    <div class="admin-page-header">
+
+        <div>
+            <h1>Admin Dashboard</h1>
+
+            <p>
+                Manage users, monitor predictions and review
+                application activity.
+            </p>
+        </div>
+
+        <div class="admin-header-badge">
+            🛡️ Administrator
+        </div>
+
+    </div>
+
+
+    <!-- ============================================================
+         ADMIN ACTIONS
+    ============================================================ -->
+
+    <div class="admin-actions">
+
+        <a
+            href="/admin/export-csv"
+            class="admin-export-btn"
+        >
+            📥 Export Predictions
+        </a>
+
+    </div>
+
+    <!-- ============================================================
+     ADMIN ANALYTICS
+============================================================ -->
+
+<div class="admin-analytics">
+
+    <div class="analytics-header">
+        <div>
+            <h2>📊 System Analytics</h2>
+            <p>
+                Overview of users, predictions and model activity.
+            </p>
+        </div>
+    </div>
+
+
+    <!-- ================= KPI CARDS ================= -->
+
+    <div class="analytics-grid">
+
+        <!-- TOTAL USERS -->
+        <div class="analytics-card">
+            <div class="analytics-icon">
+                👥
+            </div>
+
+            <div class="analytics-content">
+                <span>Total Users</span>
+                <strong>{{ total_users }}</strong>
+                <small>Registered accounts</small>
+            </div>
+        </div>
+
+
+        <!-- TOTAL PREDICTIONS -->
+        <div class="analytics-card">
+            <div class="analytics-icon">
+                📊
+            </div>
+
+            <div class="analytics-content">
+                <span>Total Predictions</span>
+                <strong>{{ total_predictions }}</strong>
+                <small>Predictions generated</small>
+            </div>
+        </div>
+
+
+        <!-- AVERAGE SCORE -->
+        <div class="analytics-card">
+            <div class="analytics-icon">
+                ⭐
+            </div>
+
+            <div class="analytics-content">
+                <span>Average Score</span>
+                <strong>{{ avg_score }}</strong>
+                <small>Across all predictions</small>
+            </div>
+        </div>
+
+
+        <!-- MODEL -->
+        <div class="analytics-card">
+            <div class="analytics-icon">
+                🤖
+            </div>
+
+            <div class="analytics-content">
+                <span>Active Model</span>
+                <strong>{{ current_model }}</strong>
+                <small>Prediction model</small>
+            </div>
+        </div>
+
+
+        <!-- GOOD -->
+        <div class="analytics-card success-analytics">
+            <div class="analytics-icon">
+                🟢
+            </div>
+
+            <div class="analytics-content">
+                <span>Good / Excellent</span>
+                <strong>{{ good_predictions }}</strong>
+                <small>Higher performance predictions</small>
+            </div>
+        </div>
+
+
+        <!-- RISK -->
+        <div class="analytics-card risk-analytics">
+            <div class="analytics-icon">
+                🔴
+            </div>
+
+            <div class="analytics-content">
+                <span>Needs Attention</span>
+                <strong>{{ risk_predictions }}</strong>
+                <small>At Risk / Needs Improvement</small>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- ================= PERFORMANCE CHART ================= -->
+
+    <div class="glass-card analytics-chart-card">
+
+        <div class="admin-section-header">
+
+            <div class="section-icon">
+                🎯
+            </div>
+
+            <div>
+                <h3>Prediction Performance Distribution</h3>
+
+                <p>
+                    Distribution of predicted student performance levels.
+                </p>
+            </div>
+
+        </div>
+
+        <div class="analytics-chart-container">
+
+            <canvas id="performanceChart"></canvas>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+    <!-- ============================================================
+         REGISTERED USERS
+    ============================================================ -->
+
+    <div class="glass-card admin-card">
+
+        <div class="admin-section-header">
+
+            <div class="section-icon">
+                👥
+            </div>
+
+            <div>
+
+                <h3>
+                    Registered Users
+                </h3>
+
+                <p>
+                    Manage registered students and administrators.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table class="history-table admin-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>Username</th>
+
+                        <th>Institute</th>
+
+                        <th>Roll No</th>
+
+                        <th>Date of Birth</th>
+
+                        <th>Role</th>
+
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for u in users %}
+
+                    <tr>
+
+                        <td>
+                            {{ u.id }}
+                        </td>
+
+
+                        <td class="admin-username">
+
+                            {{ u.username }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ u.institute or 'N/A' }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ u.roll_no or 'N/A' }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ u.birth_date or 'N/A' }}
+
+                        </td>
+
+
+                        <td>
+
+                            {% if u.role == 'admin' %}
+
+                            <span
+                                class="role-badge admin-role"
+                            >
+                                Admin
+                            </span>
+
+                            {% else %}
+
+                            <span
+                                class="role-badge user-role"
+                            >
+                                User
+                            </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+                            {% if u.id == session["user_id"] %}
+
+                            <span class="current-admin-label">
+                                Current Admin
+                            </span>
+
+                            {% else %}
+
+                            <button
+                                type="button"
+                                class="reset-password-btn"
+                                data-user-id="{{ u.id }}"
+                                data-username="{{ u.username|e }}"
+                                onclick="openResetPasswordModalFromButton(this)"
+                            >
+                                🔑 Reset Password
+                            </button>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                    {% else %}
+
+                    <tr>
+
+                        <td
+                            colspan="7"
+                            class="no-data-cell"
+                        >
+                            No registered users found.
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- ============================================================
+         ALL PREDICTIONS
+    ============================================================ -->
+
+    <div class="glass-card admin-card">
+
+        <div class="admin-section-header">
+
+            <div class="section-icon">
+                📊
+            </div>
+
+            <div>
+
+                <h3>
+                    All Predictions
+                </h3>
+
+                <p>
+                    Monitor predictions generated by all users.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table class="history-table admin-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>User</th>
+
+                        <th>Score</th>
+
+                        <th>Performance</th>
+
+                        <th>Model</th>
+
+                        <th>Date</th>
+
+                        <th>Institute</th>
+
+                        <th>Roll</th>
+
+                        <th>DOB</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for p in predictions %}
+
+                    <tr>
+
+                        <!-- USER -->
+
+                        <td class="admin-username">
+
+                            {{ p.username }}
+
+                        </td>
+
+
+                        <!-- SCORE -->
+
+                        <td class="admin-score">
+
+                            {{ "%.2f"|format(p.predicted_score|float) }}
+
+                        </td>
+
+
+                        <!-- PERFORMANCE -->
+
+                        <td>
+
+                            {% set label = p.prediction_label or 'N/A' %}
+
+                            <span
+                                class="prediction-badge {{ label|lower|replace(' ', '-') }}"
+                            >
+                                {{ label }}
+                            </span>
+
+                        </td>
+
+
+                        <!-- MODEL -->
+
+                        <td>
+
+                            <span class="model-badge">
+
+                                {{ p.model_version or 'N/A' }}
+
+                            </span>
+
+                        </td>
+
+
+                        <!-- DATE -->
+
+                        <td>
+
+                            {{ p.created_at }}
+
+                        </td>
+
+
+                        <!-- INSTITUTE -->
+
+                        <td>
+
+                            {{ p.institute or 'N/A' }}
+
+                        </td>
+
+
+                        <!-- ROLL -->
+
+                        <td>
+
+                            {{ p.roll_no or 'N/A' }}
+
+                        </td>
+
+
+                        <!-- DOB -->
+
+                        <td>
+
+                            {{ p.birth_date or 'N/A' }}
+
+                        </td>
+
+                    </tr>
+
+                    {% else %}
+
+                    <tr>
+
+                        <td
+                            colspan="8"
+                            class="no-data-cell"
+                        >
+                            No prediction records available.
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- ============================================================
+         PREDICTIONS PER DAY
+    ============================================================ -->
+
+    <div class="glass-card admin-card">
+
+        <div class="admin-section-header">
+
+            <div class="section-icon">
+                📈
+            </div>
+
+            <div>
+
+                <h3>
+                    Predictions Per Day
+                </h3>
+
+                <p>
+                    Daily prediction activity across the application.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="admin-chart-container">
+
+            <canvas
+                id="predictionChart"
+            ></canvas>
+
+        </div>
+
+    </div>
+
+
+    <!-- ============================================================
+         CHART DATA
+    ============================================================ -->
+
+    <div
+        id="chartData"
+        data-labels='[
+            {% for item in chart_data %}
+                "{{ item.day }}"
+                {% if not loop.last %},{% endif %}
+            {% endfor %}
+        ]'
+        data-values='[
+            {% for item in chart_data %}
+                {{ item.total }}
+                {% if not loop.last %},{% endif %}
+            {% endfor %}
+        ]'
+        hidden
+    ></div>
+
+    <div
+    id="performanceData"
+    data-labels='[
+        {% for item in performance_distribution %}
+            "{{ item.prediction_label }}"
+            {% if not loop.last %},{% endif %}
+        {% endfor %}
+    ]'
+    data-values='[
+        {% for item in performance_distribution %}
+            {{ item.total }}
+            {% if not loop.last %},{% endif %}
+        {% endfor %}
+    ]'
+    hidden
+></div>
+
+    <!-- ============================================================
+         RESET PASSWORD MODAL
+    ============================================================ -->
+
+    <div
+        id="resetPasswordModal"
+        class="reset-password-modal"
+    >
+
+        <div class="reset-password-box">
+
+            <button
+                type="button"
+                class="reset-close-btn"
+                onclick="closeResetPasswordModal()"
+            >
+                &times;
+            </button>
+
+
+            <div class="reset-icon">
+                🔑
+            </div>
+
+
+            <h2>
+                Reset Password
+            </h2>
+
+
+            <p>
+
+                Set a new password for
+
+                <strong id="resetUsername"></strong>
+
+            </p>
+
+
+            <form
+                id="resetPasswordForm"
+                method="POST"
+            >
+
+                <label for="newPassword">
+                    New Password
+                </label>
+
+
+                <input
+                    type="password"
+                    id="newPassword"
+                    name="new_password"
+                    minlength="6"
+                    required
+                    autocomplete="new-password"
+                    placeholder="Enter new password"
+                >
+
+
+                <label for="confirmPassword">
+                    Confirm Password
+                </label>
+
+
+                <input
+                    type="password"
+                    id="confirmPassword"
+                    minlength="6"
+                    required
+                    autocomplete="new-password"
+                    placeholder="Confirm new password"
+                >
+
+
+                <div
+                    class="password-match-message"
+                    id="passwordMatchMessage"
+                ></div>
+
+
+                <button
+                    type="submit"
+                    class="confirm-reset-btn"
+                >
+                    🔐 Reset Password
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<!-- ============================================================
+     CHART.JS
+============================================================ -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+<script>
+
+/* ============================================================
+   PREDICTION CHART
+============================================================ */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const canvas =
+            document.getElementById(
+                "predictionChart"
+            );
+
+        const chartData =
+            document.getElementById(
+                "chartData"
+            );
+
+
+        if (!canvas || !chartData) {
+            return;
+        }
+
+
+        let labels = [];
+
+        let values = [];
+
+
+        try {
+
+            labels =
+                JSON.parse(
+                    chartData.dataset.labels
+                );
+
+
+            values =
+                JSON.parse(
+                    chartData.dataset.values
+                );
+
+        } catch (error) {
+
+            console.error(
+                "Unable to read chart data:",
+                error
+            );
+
+            return;
+        }
+
+
+        new Chart(
+            canvas.getContext("2d"),
+            {
+
+                type: "line",
+
+                data: {
+
+                    labels: labels,
+
+                    datasets: [
+
+                        {
+
+                            label:
+                                "Predictions",
+
+                            data:
+                                values,
+
+                            borderColor:
+                                "#6a5acd",
+
+                            backgroundColor:
+                                "rgba(106, 90, 205, 0.12)",
+
+                            borderWidth: 3,
+
+                            fill: true,
+
+                            tension: 0.35,
+
+                            pointRadius: 4,
+
+                            pointHoverRadius: 6
+
+                        }
+
+                    ]
+
+                },
+
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    plugins: {
+
+                        legend: {
+
+                            display: true
+
+                        }
+
+                    },
+
+
+                    scales: {
+
+                        y: {
+
+                            beginAtZero: true,
+
+                            ticks: {
+
+                                precision: 0
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+        );
+
+    }
+);
+
+
+/* ============================================================
+   OPEN RESET PASSWORD MODAL
+============================================================ */
+
+function openResetPasswordModalFromButton(button) {
+
+    const userId =
+        button.getAttribute(
+            "data-user-id"
+        );
+
+
+    const username =
+        button.getAttribute(
+            "data-username"
+        );
+
+
+    const modal =
+        document.getElementById(
+            "resetPasswordModal"
+        );
+
+
+    const usernameElement =
+        document.getElementById(
+            "resetUsername"
+        );
+
+
+    const form =
+        document.getElementById(
+            "resetPasswordForm"
+        );
+
+
+    if (
+        !modal ||
+        !usernameElement ||
+        !form
+    ) {
+
+        console.error(
+            "Reset password modal elements not found."
+        );
+
+        return;
+    }
+
+
+    usernameElement.textContent =
+        username;
+
+
+    form.action =
+        "/admin/reset-password/" +
+        userId;
+
+
+    document.getElementById(
+        "newPassword"
+    ).value = "";
+
+
+    document.getElementById(
+        "confirmPassword"
+    ).value = "";
+
+
+    const message =
+        document.getElementById(
+            "passwordMatchMessage"
+        );
+
+
+    if (message) {
+
+        message.textContent = "";
+
+        message.className =
+            "password-match-message";
+
+    }
+
+
+    modal.classList.add("show");
+
+
+    setTimeout(
+        function () {
+
+            const passwordInput =
+                document.getElementById(
+                    "newPassword"
+                );
+
+
+            if (passwordInput) {
+
+                passwordInput.focus();
+
+            }
+
+        },
+        100
+    );
+
+}
+
+
+/* ============================================================
+   CLOSE RESET PASSWORD MODAL
+============================================================ */
+
+function closeResetPasswordModal() {
+
+    const modal =
+        document.getElementById(
+            "resetPasswordModal"
+        );
+
+
+    if (modal) {
+
+        modal.classList.remove(
+            "show"
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   CLOSE WHEN CLICKING OUTSIDE
+============================================================ */
+
+const resetModal =
+    document.getElementById(
+        "resetPasswordModal"
+    );
+
+
+if (resetModal) {
+
+    resetModal.addEventListener(
+        "click",
+        function (event) {
+
+            if (
+                event.target ===
+                resetModal
+            ) {
+
+                closeResetPasswordModal();
+
+            }
+
+        }
+    );
+
+}
+
+
+/* ============================================================
+   CLOSE WITH ESC
+============================================================ */
+
+document.addEventListener(
+    "keydown",
+    function (event) {
+
+        if (
+            event.key === "Escape"
+        ) {
+
+            closeResetPasswordModal();
+
+        }
+
+    }
+);
+
+
+/* ============================================================
+   PASSWORD VALIDATION
+============================================================ */
+
+const newPasswordInput =
+    document.getElementById(
+        "newPassword"
+    );
+
+
+const confirmPasswordInput =
+    document.getElementById(
+        "confirmPassword"
+    );
+
+
+const passwordMatchMessage =
+    document.getElementById(
+        "passwordMatchMessage"
+    );
+
+
+function validatePasswordMatch() {
+
+    if (
+        !newPasswordInput ||
+        !confirmPasswordInput ||
+        !passwordMatchMessage
+    ) {
+
+        return true;
+
+    }
+
+
+    const password =
+        newPasswordInput.value;
+
+
+    const confirmPassword =
+        confirmPasswordInput.value;
+
+
+    if (!confirmPassword) {
+
+        passwordMatchMessage.textContent =
+            "";
+
+
+        passwordMatchMessage.className =
+            "password-match-message";
+
+
+        return true;
+
+    }
+
+
+    if (
+        password !==
+        confirmPassword
+    ) {
+
+        passwordMatchMessage.textContent =
+            "Passwords do not match.";
+
+
+        passwordMatchMessage.className =
+            "password-match-message password-error";
+
+
+        return false;
+
+    }
+
+
+    passwordMatchMessage.textContent =
+        "Passwords match.";
+
+
+    passwordMatchMessage.className =
+        "password-match-message password-success";
+
+
+    return true;
+
+}
+
+
+if (newPasswordInput) {
+
+    newPasswordInput.addEventListener(
+        "input",
+        validatePasswordMatch
+    );
+
+}
+
+
+if (confirmPasswordInput) {
+
+    confirmPasswordInput.addEventListener(
+        "input",
+        validatePasswordMatch
+    );
+
+}
+
+
+/* ============================================================
+   FORM SUBMIT VALIDATION
+============================================================ */
+
+const resetPasswordForm =
+    document.getElementById(
+        "resetPasswordForm"
+    );
+
+
+if (resetPasswordForm) {
+
+    resetPasswordForm.addEventListener(
+        "submit",
+        function (event) {
+
+            const password =
+                newPasswordInput.value;
+
+
+            const confirmPassword =
+                confirmPasswordInput.value;
+
+
+            if (
+                password.length < 6
+            ) {
+
+                event.preventDefault();
+
+
+                alert(
+                    "Password must contain at least 6 characters."
+                );
+
+
+                return;
+
+            }
+
+
+            if (
+                password !==
+                confirmPassword
+            ) {
+
+                event.preventDefault();
+
+
+                alert(
+                    "Passwords do not match."
+                );
+
+
+                return;
+
+            }
+
+        }
+    );
+
+}
+
+/* ============================================================
+   PERFORMANCE DISTRIBUTION CHART
+============================================================ */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const canvas =
+            document.getElementById(
+                "performanceChart"
+            );
+
+        const performanceData =
+            document.getElementById(
+                "performanceData"
+            );
+
+        if (!canvas || !performanceData) {
+            return;
+        }
+
+        let labels = [];
+        let values = [];
+
+        try {
+
+            labels = JSON.parse(
+                performanceData.dataset.labels
+            );
+
+            values = JSON.parse(
+                performanceData.dataset.values
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Unable to read performance data:",
+                error
+            );
+
+            return;
+        }
+
+        new Chart(
+            canvas.getContext("2d"),
+            {
+                type: "doughnut",
+
+                data: {
+                    labels: labels,
+
+                    datasets: [
+                        {
+                            label: "Predictions",
+                            data: values,
+
+                            backgroundColor: [
+                                "#16834f",
+                                "#6a5acd",
+                                "#d9a400",
+                                "#e67e22",
+                                "#c62828"
+                            ],
+
+                            borderWidth: 2,
+                            borderColor: "#ffffff"
+                        }
+                    ]
+                },
+
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+
+                    plugins: {
+                        legend: {
+                            position: "bottom"
+                        }
+                    }
+                }
+            }
+        );
+    }
+);
+
+</script>
+
+
+<!-- ============================================================
+     ADMIN CSS
+============================================================ -->
+
+<style>
+
+/* ============================================================
+   PAGE
+============================================================ */
+
+.admin-page {
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding-bottom: 40px;
+
+}
+
+
+.admin-page-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 25px;
+
+}
+
+
+.admin-page-header h1 {
+
+    margin: 0 0 6px;
+
+    color: #25213a;
+
+    font-size: 28px;
+
+    font-weight: 800;
+
+}
+
+
+.admin-page-header p {
+
+    margin: 0;
+
+    color: #77748a;
+
+    font-size: 13px;
+
+}
+
+
+.admin-header-badge {
+
+    padding: 10px 16px;
+
+    border-radius: 20px;
+
+    background: #eeeafd;
+
+    color: #5a3fc0;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+
+}
+
+
+/* ============================================================
+   ACTIONS
+============================================================ */
+
+.admin-actions {
+
+    display: flex;
+
+    justify-content: flex-end;
+
+    margin-bottom: 20px;
+
+}
+
+
+.admin-export-btn {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    padding: 12px 20px;
+
+    border-radius: 22px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #6a5acd,
+            #5a3fc0
+        );
+
+    color: #ffffff;
+
+    text-decoration: none;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    box-shadow:
+        0 7px 16px
+        rgba(
+            106,
+            90,
+            205,
+            0.22
+        );
+
+    transition: 0.25s ease;
+
+}
+
+
+.admin-export-btn:hover {
+
+    transform:
+        translateY(-2px);
+
+    color: #ffffff;
+
+}
+
+
+/* ============================================================
+   CARDS
+============================================================ */
+
+.admin-card {
+
+    max-width: 1200px;
+
+    margin:
+        0 auto 25px;
+
+}
+
+
+/* ============================================================
+   SECTION HEADER
+============================================================ */
+
+.admin-section-header {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    margin-bottom: 20px;
+
+}
+
+
+.section-icon {
+
+    width: 42px;
+
+    height: 42px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: #f0edfa;
+
+    font-size: 20px;
+
+}
+
+
+.admin-section-header h3 {
+
+    margin:
+        0 0 4px;
+
+    color: #25213a;
+
+    font-size: 16px;
+
+    font-weight: 700;
+
+}
+
+
+.admin-section-header p {
+
+    margin: 0;
+
+    color: #77748a;
+
+    font-size: 11px;
+
+}
+
+
+/* ============================================================
+   TABLE
+============================================================ */
+
+.admin-table {
+
+    width: 100%;
+
+    color: #25213a;
+
+}
+
+
+.admin-table thead {
+
+    background: #f4f1fb !important;
+
+}
+
+
+.admin-table th {
+
+    color: #5a3fc0 !important;
+
+    white-space: nowrap;
+
+}
+
+
+.admin-table td {
+
+    color: #555064;
+
+}
+
+
+.admin-table tbody tr:hover {
+
+    background: #f8f6fd !important;
+
+}
+
+
+.admin-username {
+
+    color: #25213a !important;
+
+    font-weight: 600;
+
+}
+
+
+.admin-score {
+
+    color: #6a5acd !important;
+
+    font-weight: 700;
+
+}
+
+
+/* ============================================================
+   ROLE BADGES
+============================================================ */
+
+.role-badge {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-width: 55px;
+
+    padding: 5px 9px;
+
+    border-radius: 20px;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+}
+
+
+.admin-role {
+
+    background: #eeeafd;
+
+    color: #5a3fc0;
+
+}
+
+
+.user-role {
+
+    background: #f0fdf4;
+
+    color: #16a34a;
+
+}
+
+
+/* ============================================================
+   PREDICTION BADGES
+============================================================ */
+
+.prediction-badge {
+
+    display: inline-block;
+
+    padding: 6px 12px;
+
+    border-radius: 20px;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+
+    background: #eeeaff;
+
+    color: #5a3fc0;
+
+}
+
+
+.prediction-badge.excellent {
+
+    background: #e8f8ef;
+
+    color: #16834f;
+
+}
+
+
+.prediction-badge.good {
+
+    background: #eeeaff;
+
+    color: #5a3fc0;
+
+}
+
+
+.prediction-badge.average {
+
+    background: #fff4d6;
+
+    color: #9a6b00;
+
+}
+
+
+.prediction-badge.needs-improvement {
+
+    background: #ffe9d6;
+
+    color: #a85b00;
+
+}
+
+
+.prediction-badge.at-risk {
+
+    background: #ffe5e5;
+
+    color: #c62828;
+
+}
+
+
+/* ============================================================
+   MODEL
+============================================================ */
+
+.model-badge {
+
+    display: inline-block;
+
+    padding: 5px 10px;
+
+    border-radius: 8px;
+
+    background: #f0edfa;
+
+    color: #5a3fc0;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+}
+
+
+/* ============================================================
+   NO DATA
+============================================================ */
+
+.no-data-cell {
+
+    text-align: center;
+
+    padding: 30px !important;
+
+    color: #77748a !important;
+
+    font-size: 12px;
+
+}
+
+
+/* ============================================================
+   CHART
+============================================================ */
+
+.admin-chart-container {
+
+    position: relative;
+
+    width: 100%;
+
+    height: 350px;
+
+}
+
+
+/* ============================================================
+   RESET PASSWORD BUTTON
+============================================================ */
+
+.reset-password-btn {
+
+    border: none;
+
+    background:
+        linear-gradient(
+            135deg,
+            #6a5acd,
+            #5a3fc0
+        );
+
+    color: #ffffff;
+
+    padding: 8px 14px;
+
+    border-radius: 8px;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+
+    white-space: nowrap;
+
+}
+
+
+.reset-password-btn:hover {
+
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0 5px 15px
+        rgba(
+            90,
+            63,
+            192,
+            0.25
+        );
+
+}
+
+
+.current-admin-label {
+
+    color: #77748a;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+
+}
+
+
+/* ============================================================
+   RESET PASSWORD MODAL
+============================================================ */
+
+.reset-password-modal {
+
+    display: none;
+
+    position: fixed;
+
+    inset: 0;
+
+    background:
+        rgba(
+            31,
+            27,
+            45,
+            0.55
+        );
+
+    z-index: 9999;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 20px;
+
+    box-sizing: border-box;
+
+}
+
+
+.reset-password-modal.show {
+
+    display: flex;
+
+}
+
+
+.reset-password-box {
+
+    width: 420px;
+
+    max-width: 100%;
+
+    background: #ffffff;
+
+    border-radius: 18px;
+
+    padding: 30px;
+
+    position: relative;
+
+    box-shadow:
+        0 20px 60px
+        rgba(
+            31,
+            27,
+            45,
+            0.25
+        );
+
+    box-sizing: border-box;
+
+}
+
+
+.reset-password-box h2 {
+
+    margin:
+        12px 0 6px;
+
+    color: #25213a;
+
+    font-size: 22px;
+
+}
+
+
+.reset-password-box p {
+
+    color: #77748a;
+
+    margin:
+        0 0 25px;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+
+}
+
+
+.reset-password-box p strong {
+
+    color: #5a3fc0;
+
+}
+
+
+.reset-close-btn {
+
+    position: absolute;
+
+    right: 18px;
+
+    top: 15px;
+
+    border: none;
+
+    background: transparent;
+
+    font-size: 28px;
+
+    color: #77748a;
+
+    cursor: pointer;
+
+    line-height: 1;
+
+}
+
+
+.reset-close-btn:hover {
+
+    color: #5a3fc0;
+
+}
+
+
+.reset-icon {
+
+    width: 50px;
+
+    height: 50px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: #eeeafd;
+
+    border-radius: 14px;
+
+    font-size: 24px;
+
+}
+
+
+.reset-password-box label {
+
+    display: block;
+
+    margin:
+        14px 0 7px;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    color: #25213a;
+
+}
+
+
+.reset-password-box input {
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding:
+        12px 14px;
+
+    border:
+        1px solid #ddd8ed;
+
+    border-radius: 9px;
+
+    background: #f7f5ff;
+
+    outline: none;
+
+    font-size: 14px;
+
+    color: #25213a;
+
+}
+
+
+.reset-password-box input:focus {
+
+    border-color: #6a5acd;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(
+            106,
+            90,
+            205,
+            0.12
+        );
+
+}
+
+
+/* ============================================================
+   PASSWORD MESSAGE
+============================================================ */
+
+.password-match-message {
+
+    min-height: 18px;
+
+    margin-top: 7px;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+}
+
+
+.password-error {
+
+    color: #c62828;
+
+}
+
+
+.password-success {
+
+    color: #16834f;
+
+}
+
+
+/* ============================================================
+   CONFIRM RESET
+============================================================ */
+
+.confirm-reset-btn {
+
+    width: 100%;
+
+    margin-top: 15px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    padding: 13px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #6a5acd,
+            #5a3fc0
+        );
+
+    color: #ffffff;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+
+}
+
+
+.confirm-reset-btn:hover {
+
+    opacity: 0.92;
+
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0 7px 18px
+        rgba(
+            90,
+            63,
+            192,
+            0.22
+        );
+
+}
+
+
+/* ============================================================
+   MOBILE
+============================================================ */
+
+@media (max-width: 700px) {
+
+    .admin-page-header {
+
+        align-items: flex-start;
+
+        flex-direction: column;
+
+    }
+
+
+    .admin-actions {
+
+        justify-content: stretch;
+
+    }
+
+
+    .admin-export-btn {
+
+        width: 100%;
+
+    }
+
+
+    .admin-section-header {
+
+        align-items: flex-start;
+
+    }
+
+
+    .admin-chart-container {
+
+        height: 280px;
+
+    }
+
+
+    .reset-password-box {
+
+        padding: 24px;
+
+    }
+
+
+    .reset-password-btn {
+
+        padding:
+            7px 10px;
+
+        font-size: 10px;
+
+    }
+
+}
+
+/* ============================================================
+   ADMIN ANALYTICS
+============================================================ */
+
+.admin-analytics {
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+.analytics-header {
+    margin-bottom: 18px;
+}
+
+.analytics-header h2 {
+    margin: 0 0 5px;
+    color: #25213a;
+    font-size: 21px;
+    font-weight: 800;
+}
+
+.analytics-header p {
+    margin: 0;
+    color: #77748a;
+    font-size: 12px;
+}
+
+
+/* ============================================================
+   ANALYTICS GRID
+============================================================ */
+
+.analytics-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 16px;
+
+    margin-bottom: 20px;
+}
+
+
+/* ============================================================
+   ANALYTICS CARD
+============================================================ */
+
+.analytics-card {
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 20px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ffffff,
+            #f7f5ff
+        );
+
+    border: 1px solid #e6e0f3;
+
+    border-radius: 16px;
+
+    box-shadow:
+        0 6px 18px
+        rgba(
+            90,
+            63,
+            192,
+            0.07
+        );
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.analytics-card:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 10px 25px
+        rgba(
+            90,
+            63,
+            192,
+            0.12
+        );
+}
+
+
+/* ============================================================
+   ANALYTICS ICON
+============================================================ */
+
+.analytics-icon {
+    width: 48px;
+    height: 48px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 13px;
+
+    background: #eeeafd;
+
+    font-size: 23px;
+}
+
+
+/* ============================================================
+   ANALYTICS CONTENT
+============================================================ */
+
+.analytics-content {
+    display: flex;
+
+    flex-direction: column;
+
+    min-width: 0;
+}
+
+.analytics-content span {
+    color: #77748a;
+
+    font-size: 11px;
+
+    font-weight: 600;
+}
+
+.analytics-content strong {
+    margin-top: 3px;
+
+    color: #5a3fc0;
+
+    font-size: 24px;
+
+    font-weight: 800;
+}
+
+.analytics-content small {
+    margin-top: 2px;
+
+    color: #9994a8;
+
+    font-size: 10px;
+}
+
+
+/* ============================================================
+   SUCCESS / RISK
+============================================================ */
+
+.success-analytics {
+    border-left: 4px solid #16834f;
+}
+
+.success-analytics .analytics-icon {
+    background: #e8f8ef;
+}
+
+.success-analytics .analytics-content strong {
+    color: #16834f;
+}
+
+
+.risk-analytics {
+    border-left: 4px solid #c62828;
+}
+
+.risk-analytics .analytics-icon {
+    background: #ffe5e5;
+}
+
+.risk-analytics .analytics-content strong {
+    color: #c62828;
+}
+
+
+/* ============================================================
+   PERFORMANCE CHART
+============================================================ */
+
+.analytics-chart-card {
+    max-width: 1200px;
+
+    margin:
+        0 auto 25px;
+}
+
+.analytics-chart-container {
+    position: relative;
+
+    width: 100%;
+
+    height: 320px;
+}
+
+
+/* ============================================================
+   MOBILE
+============================================================ */
+
+@media (max-width: 900px) {
+
+    .analytics-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .analytics-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .analytics-chart-container {
+        height: 280px;
+    }
+}
+
+</style>
+
+{% endblock %}

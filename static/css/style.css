@@ -1,0 +1,1323 @@
+/* =========================================================
+   STUDENT PERFORMANCE ML
+   GLOBAL + AUTHENTICATION + DASHBOARD COMPONENTS
+   ========================================================= */
+
+
+/* =========================================================
+   GOOGLE FONT
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700,800');
+
+
+/* =========================================================
+   GLOBAL RESET
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    width: 100%;
+    min-height: 100%;
+}
+
+
+/* =========================================================
+   AUTHENTICATION PAGE
+   ========================================================= */
+
+body.login-body {
+    width: 100%;
+    min-height: 100vh;
+
+    margin: 0;
+    padding: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-family: 'Montserrat', sans-serif;
+
+    background: #f6f5f7;
+
+    overflow-x: hidden;
+}
+
+
+/* =========================================================
+   LOGIN / SIGNUP MAIN CONTAINER
+   ========================================================= */
+
+.auth-container {
+    position: relative;
+
+    width: 900px;
+    max-width: 100%;
+
+    min-height: 560px;
+
+    background: #ffffff;
+
+    border-radius: 24px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 20px 50px rgba(0, 0, 0, 0.18),
+        0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+
+/* =========================================================
+   AUTH FORM CONTAINERS
+   ========================================================= */
+
+.auth-form-container {
+    position: absolute;
+
+    top: 0;
+
+    width: 50%;
+    height: 100%;
+
+    transition:
+        transform 0.6s ease-in-out,
+        opacity 0.6s ease-in-out;
+}
+
+
+/* =========================================================
+   SIGN IN
+   ========================================================= */
+
+.auth-form-container.sign-in {
+    left: 0;
+
+    z-index: 2;
+
+    opacity: 1;
+}
+
+
+/* =========================================================
+   SIGN UP
+   ========================================================= */
+
+.auth-form-container.sign-up {
+    left: 0;
+
+    z-index: 1;
+
+    opacity: 0;
+}
+
+
+/* =========================================================
+   ACTIVE AUTH STATE
+   ========================================================= */
+
+.auth-container.active
+.auth-form-container.sign-in {
+
+    transform: translateX(100%);
+
+    opacity: 0;
+}
+
+
+.auth-container.active
+.auth-form-container.sign-up {
+
+    transform: translateX(100%);
+
+    opacity: 1;
+
+    z-index: 5;
+}
+
+
+/* =========================================================
+   AUTH FORM
+   ========================================================= */
+
+.auth-form-container form {
+
+    width: 100%;
+    height: 100%;
+
+    margin: 0;
+    padding: 35px 55px;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    background: #ffffff;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   AUTH LOGO
+   ========================================================= */
+
+.auth-logo {
+
+    width: 58px;
+    height: 58px;
+
+    margin-bottom: 14px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #6a5acd,
+            #5a3fc0
+        );
+
+    color: #ffffff;
+
+    font-size: 24px;
+
+    box-shadow:
+        0 8px 20px rgba(106, 90, 205, 0.25);
+}
+
+
+/* =========================================================
+   AUTH HEADINGS
+   ========================================================= */
+
+.auth-form-container h1,
+.register-card h1 {
+
+    margin: 5px 0 8px;
+
+    font-family: 'Montserrat', sans-serif;
+
+    font-size: 28px;
+
+    font-weight: 800;
+
+    color: #222222;
+}
+
+
+/* =========================================================
+   AUTH SUBTITLE
+   ========================================================= */
+
+.auth-subtitle {
+
+    max-width: 330px;
+
+    margin: 0 0 20px;
+
+    font-family: 'Montserrat', sans-serif;
+
+    font-size: 12px;
+
+    line-height: 1.5;
+
+    color: #777777;
+}
+
+
+/* =========================================================
+   AUTH ERROR
+   ========================================================= */
+
+.auth-error {
+
+    width: 100%;
+    max-width: 330px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    margin: 0 0 10px;
+
+    padding: 9px 11px;
+
+    background: #fff1f2;
+
+    border: 1px solid #fecdd3;
+
+    border-radius: 7px;
+
+    color: #dc2626;
+
+    font-family: 'Montserrat', sans-serif;
+
+    font-size: 11px;
+
+    line-height: 1.4;
+
+    text-align: left;
+}
+
+
+/* =========================================================
+   AUTH INPUT WRAPPER
+   ========================================================= */
+
+.auth-input {
+
+    width: 100%;
+    max-width: 330px;
+
+    height: 46px;
+
+    margin: 6px 0;
+
+    display: flex;
+    align-items: center;
+
+    background: #eeeeee;
+
+    border: 1px solid transparent;
+
+    border-radius: 8px;
+
+    transition:
+        background 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+
+.auth-input:focus-within {
+
+    background: #ffffff;
+
+    border-color: #6a5acd;
+
+    box-shadow:
+        0 0 0 3px rgba(106, 90, 205, 0.10);
+}
+
+
+/* =========================================================
+   AUTH INPUT ICON
+   ========================================================= */
+
+.auth-input i {
+
+    width: 45px;
+
+    flex-shrink: 0;
+
+    color: #777777;
+
+    font-size: 14px;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   AUTH INPUT FIELD
+   ========================================================= */
+
+.auth-input input {
+
+    width: 100%;
+    height: 100%;
+
+    margin: 0;
+    padding: 0 12px 0 0;
+
+    background: transparent;
+
+    border: none;
+    outline: none;
+
+    font-family: 'Montserrat', sans-serif;
+
+    font-size: 12px;
+
+    color: #333333;
+}
+
+
+.auth-input input::placeholder {
+
+    color: #888888;
+
+    opacity: 1;
+}
+
+
+/* =========================================================
+   DATE INPUT
+   ========================================================= */
+
+.auth-input input[type="date"] {
+
+    color: #555555;
+
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   FORGOT PASSWORD
+   ========================================================= */
+
+.forgot-password {
+
+    margin-top: 8px;
+    margin-bottom: 2px;
+
+    color: #6a5acd;
+
+    font-family: 'Montserrat', sans-serif;
+
+    font-size: 11px;
+
+    text-decoration: none;
+
+    transition: color 0.2s ease;
+}
+
+
+.forgot-password:hover {
+
+    color: #5a3fc0;
+
+    text-decoration: underline;
+}
+
+
+/* =========================================================
+   MAIN AUTH BUTTON
+   ========================================================= */
+
+.auth-button {
+
+    width: 190px;
+    height: 44px;
+
+    margin-top: 12px;
+
+    border: none;
+
+    border-radius: 22px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #6a5acd,
+            #5a3fc0
+        );
+
+    color: #ffffff;
+
+    font-family: 'Montserrat', sans-serif;
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.6px;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+
+    box-shadow:
+        0 7px 16px rgba(106, 90, 205, 0.25);
+}
+
+
+.auth-button:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 10px 22px rgba(106, 90, 205, 0.35);
+}
+
+
+.auth-button:active {
+
+    transform: scale(0.97);
+}
+
+
+/* =========================================================
+   PURPLE TOGGLE CONTAINER
+   ========================================================= */
+
+.toggle-container {
+
+    position: absolute;
+
+    top: 0;
+    right: 0;
+
+    width: 50%;
+    height: 100%;
+
+    overflow: hidden;
+
+    z-index: 100;
+
+    transition:
+        transform 0.6s ease-in-out;
+}
+
+
+/* =========================================================
+   MOVE TOGGLE PANEL
+   ========================================================= */
+
+.auth-container.active
+.toggle-container {
+
+    transform: translateX(-100%);
+}
+
+
+/* =========================================================
+   PURPLE TOGGLE BACKGROUND
+   ========================================================= */
+
+.toggle {
+
+    position: relative;
+
+    left: -100%;
+
+    width: 200%;
+    height: 100%;
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #6a5acd,
+            #5a3fc0
+        );
+
+    transform: translateX(0);
+
+    transition:
+        transform 0.6s ease-in-out;
+}
+
+
+/* =========================================================
+   TOGGLE ACTIVE TRANSFORMATION
+   ========================================================= */
+
+.auth-container.active
+.toggle {
+
+    transform: translateX(50%);
+}
+
+
+/* =========================================================
+   TOGGLE PANELS
+   ========================================================= */
+
+.toggle-panel {
+
+    position: absolute;
+
+    top: 0;
+
+    width: 50%;
+    height: 100%;
+
+    padding: 0 50px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-direction: column;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   LEFT TOGGLE
+   ========================================================= */
+
+.toggle-left {
+
+    transform: translateX(-20%);
+}
+
+
+.auth-container.active
+.toggle-left {
+
+    transform: translateX(0);
+}
+
+
+/* =========================================================
+   RIGHT TOGGLE
+   ========================================================= */
+
+.toggle-right {
+
+    right: 0;
+}
+
+
+/* =========================================================
+   TOGGLE ICON
+   ========================================================= */
+
+.toggle-icon {
+
+    width: 55px;
+    height: 55px;
+
+    margin-bottom: 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255, 255, 255, 0.15);
+
+    color: #ffffff;
+
+    font-size: 22px;
+}
+
+
+/* =========================================================
+   TOGGLE HEADING
+   ========================================================= */
+
+.toggle-panel h1 {
+
+    margin: 0 0 12px;
+
+    color: #ffffff;
+
+    font-family: 'Montserrat', sans-serif;
+
+    font-size: 27px;
+
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   TOGGLE TEXT
+   ========================================================= */
+
+.toggle-panel p {
+
+    max-width: 300px;
+
+    margin: 0 0 25px;
+
+    color: rgba(255, 255, 255, 0.92);
+
+    font-family: 'Montserrat', sans-serif;
+
+    font-size: 12px;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   TOGGLE BUTTON
+   ========================================================= */
+
+.toggle-button {
+
+    min-width: 125px;
+
+    height: 42px;
+
+    padding: 0 25px;
+
+    border: 2px solid #ffffff;
+
+    border-radius: 22px;
+
+    background: #ffffff;
+
+    color: #6a5acd;
+
+    font-family: 'Montserrat', sans-serif;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.7px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.25s ease,
+        color 0.25s ease,
+        transform 0.25s ease;
+}
+
+
+.toggle-button:hover {
+
+    background: transparent;
+
+    color: #ffffff;
+}
+
+
+.toggle-button:active {
+
+    transform: scale(0.96);
+}
+
+
+/* =========================================================
+   REGISTER PAGE
+   ========================================================= */
+
+.register-page {
+
+    width: 100%;
+
+    min-height: 100vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 25px;
+}
+
+
+/* =========================================================
+   REGISTER CARD
+   ========================================================= */
+
+.register-card {
+
+    width: 460px;
+    max-width: 100%;
+
+    padding: 35px 42px;
+
+    background: #ffffff;
+
+    border-radius: 24px;
+
+    text-align: center;
+
+    box-shadow:
+        0 20px 50px rgba(0, 0, 0, 0.16),
+        0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+
+/* =========================================================
+   REGISTER LOGO
+   ========================================================= */
+
+.register-card .auth-logo {
+
+    width: 58px;
+    height: 58px;
+
+    margin: 0 auto 14px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #6a5acd,
+            #5a3fc0
+        );
+
+    color: #ffffff;
+
+    font-size: 24px;
+
+    box-shadow:
+        0 8px 20px rgba(106, 90, 205, 0.25);
+}
+
+
+/* =========================================================
+   REGISTER FORM
+   ========================================================= */
+
+.register-card form {
+
+    width: 100%;
+
+    margin: 0;
+    padding: 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    background: transparent;
+}
+
+
+/* =========================================================
+   REGISTER INPUTS
+   ========================================================= */
+
+.register-card .auth-input {
+
+    max-width: 100%;
+}
+
+
+/* =========================================================
+   REGISTER BUTTON
+   ========================================================= */
+
+.register-card .auth-button {
+
+    width: 100%;
+}
+
+
+/* =========================================================
+   REGISTER LOGIN LINK
+   ========================================================= */
+
+.register-login-link {
+
+    margin-top: 20px;
+
+    color: #777777;
+
+    font-family: 'Montserrat', sans-serif;
+
+    font-size: 11px;
+}
+
+
+.register-login-link a {
+
+    margin-left: 4px;
+
+    color: #6a5acd;
+
+    font-weight: 800;
+
+    text-decoration: none;
+
+    transition: color 0.2s ease;
+}
+
+
+.register-login-link a:hover {
+
+    color: #5a3fc0;
+
+    text-decoration: underline;
+}
+
+
+/* =========================================================
+   DASHBOARD / PREDICTION FORM
+   ========================================================= */
+
+.form-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 18px;
+
+    margin-top: 15px;
+}
+
+
+.form-grid input {
+
+    height: 55px;
+
+    padding: 12px 16px;
+
+    border-radius: 10px;
+
+    background: #2a3242;
+
+    border: 1px solid #3a455a;
+
+    color: #ffffff;
+
+    font-size: 16px;
+}
+
+
+.form-grid input:focus {
+
+    outline: none;
+
+    border-color: #6a5acd;
+
+    box-shadow:
+        0 0 0 3px rgba(106, 90, 205, 0.15);
+}
+
+
+/* =========================================================
+   PREDICTION BUTTON
+   ========================================================= */
+
+.btn-primary-modern {
+
+    grid-column: span 3;
+
+    height: 55px;
+
+    margin-top: 10px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    font-size: 17px;
+
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   DOWNLOAD BUTTON
+   ========================================================= */
+
+.download-btn {
+
+    display: inline-block;
+
+    padding: 12px 20px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #3b82f6,
+            #2563eb
+        );
+
+    color: #ffffff !important;
+
+    border-radius: 12px;
+
+    text-decoration: none;
+
+    font-weight: 600;
+
+    font-size: 14px;
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease,
+        background 0.3s ease;
+
+    box-shadow:
+        0 6px 15px rgba(0, 0, 0, 0.25);
+}
+
+
+.download-btn:hover {
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #1d4ed8
+        );
+
+    transform: translateY(-2px);
+
+    color: #ffffff !important;
+}
+
+
+.download-btn:active {
+
+    transform: scale(0.96);
+}
+
+
+/* =========================================================
+   RESPONSIVE - TABLET
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    body.login-body {
+
+        padding: 15px;
+    }
+
+
+    .auth-container {
+
+        width: 100%;
+
+        min-height: 560px;
+
+        border-radius: 20px;
+    }
+
+
+    .toggle-container {
+
+        display: none;
+    }
+
+
+    .auth-form-container {
+
+        width: 100%;
+    }
+
+
+    .auth-form-container.sign-up {
+
+        display: none;
+    }
+
+
+    .auth-container.active
+    .auth-form-container.sign-in {
+
+        display: none;
+
+        transform: none;
+    }
+
+
+    .auth-container.active
+    .auth-form-container.sign-up {
+
+        display: block;
+
+        transform: none;
+
+        opacity: 1;
+
+        z-index: 5;
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE - MOBILE
+   ========================================================= */
+
+@media (max-width: 520px) {
+
+    body.login-body {
+
+        padding: 10px;
+    }
+
+
+    .auth-container {
+
+        min-height: 540px;
+
+        border-radius: 18px;
+    }
+
+
+    .auth-form-container form {
+
+        padding: 30px 25px;
+    }
+
+
+    .auth-form-container h1,
+    .register-card h1 {
+
+        font-size: 24px;
+    }
+
+
+    .auth-logo,
+    .register-card .auth-logo {
+
+        width: 52px;
+        height: 52px;
+
+        font-size: 21px;
+    }
+
+
+    .auth-input {
+
+        height: 45px;
+    }
+
+
+    .auth-button {
+
+        height: 44px;
+    }
+
+
+    .register-page {
+
+        padding: 15px;
+    }
+
+
+    .register-card {
+
+        padding: 30px 22px;
+
+        border-radius: 18px;
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE - SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+    .auth-form-container form {
+
+        padding: 25px 18px;
+    }
+
+
+    .register-card {
+
+        padding: 25px 18px;
+    }
+
+
+    .auth-form-container h1,
+    .register-card h1 {
+
+        font-size: 22px;
+    }
+
+
+    .auth-subtitle {
+
+        font-size: 11px;
+    }
+
+
+    .auth-input {
+
+        height: 43px;
+    }
+
+
+    .auth-input input {
+
+        font-size: 11px;
+    }
+}
+
+.forgot-password-link {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.forgot-password-link a {
+    color: #6A5ACD;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.forgot-password-link a:hover {
+    color: #5A3FC0;
+    text-decoration: underline;
+}
+
+/* ============================================================
+   FORGOT PASSWORD
+============================================================ */
+
+.forgot-container {
+    min-height: 500px;
+}
+
+.forgot-container .auth-form-container {
+    width: 100%;
+    max-width: 480px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.forgot-container form {
+    width: 100%;
+    max-width: 360px;
+}
+
+.forgot-password {
+    display: block;
+    text-align: center;
+    margin-top: 16px;
+
+    color: #6A5ACD;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    text-decoration: none;
+
+    transition: 0.2s ease;
+}
+
+.forgot-password:hover {
+    color: #5A3FC0;
+    text-decoration: underline;
+}
+
+.password-match-message {
+    min-height: 18px;
+    margin: 5px 0 10px;
+
+    text-align: center;
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.password-success {
+    color: #16a34a;
+}
+
+.password-error {
+    color: #dc2626;
+}
+
+/* =========================================================
+   PERSONALIZED RECOMMENDATIONS
+   ========================================================= */
+
+.recommendations-card {
+    margin-top: 24px;
+}
+
+.recommendations-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 22px;
+}
+
+.recommendation-card {
+    background: #ffffff;
+    border: 1px solid #e7e1f5;
+    border-radius: 16px;
+    padding: 20px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.recommendation-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(106, 90, 205, 0.12);
+}
+
+.recommendation-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.recommendation-icon {
+    font-size: 25px;
+}
+
+.recommendation-header h4 {
+    margin: 0;
+    color: #25213a;
+    font-size: 17px;
+}
+
+.recommendation-priority {
+    display: inline-block;
+    margin-top: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #777;
+}
+
+.recommendation-message {
+    margin: 15px 0 0;
+    color: #666;
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+/* Priority indicators */
+
+.priority-high {
+    border-left: 5px solid #dc3545;
+}
+
+.priority-medium {
+    border-left: 5px solid #f0a500;
+}
+
+.priority-low {
+    border-left: 5px solid #28a745;
+}
+
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 768px) {
+
+    .recommendations-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
